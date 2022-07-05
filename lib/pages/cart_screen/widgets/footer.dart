@@ -1,3 +1,4 @@
+import 'package:ecommerce/api/api.dart';
 import 'package:flutter/material.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:whatsapp_unilink/whatsapp_unilink.dart';
@@ -19,11 +20,19 @@ class Footer extends StatefulWidget {
 }
 
 class _FooterState extends State<Footer> {
-  String message = "";
-  String username = "";
+  String message = "", username = "";
+  String? phoneNumber = "";
   TextEditingController noteController = TextEditingController();
 
+  getNumberPhone() {
+    var number = Api.getAbout();
+    number.then((value) {
+      setState((){
+        phoneNumber = value.data!.contact;
+      });
 
+    });
+  }
   // mengambil username dari pref
   // ini untuk nama
   getUsername() {
@@ -36,7 +45,7 @@ class _FooterState extends State<Footer> {
     await getUsername();
     setMessage();
     final link = WhatsAppUnilink(
-      phoneNumber: "+628999533158",
+      phoneNumber: phoneNumber,
       text: message,
     );
     await launch('$link');
@@ -55,7 +64,11 @@ class _FooterState extends State<Footer> {
     message += "Note : ${noteController.text}";
   }
 
-
+  @override
+  void initState() {
+    getNumberPhone();
+    super.initState();
+  }
   @override
   Widget build(BuildContext context) {
     return Column(

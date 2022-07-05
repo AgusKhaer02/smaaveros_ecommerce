@@ -2,6 +2,8 @@
 
 import 'dart:convert';
 
+import 'package:ecommerce/api/about/AboutResponse.dart';
+
 import 'auth/AddToCartResponse.dart';
 import 'auth/LoginResponse.dart';
 import 'carousel/ListCarouselResponse.dart';
@@ -21,7 +23,7 @@ import 'help/ListHelpResponse.dart';
 import 'product/DetailProductResponse.dart';
 import 'product/ListProductResponse.dart';
 
-const BASE_URL = "https://ecommerce.smaaveros.sch.id/index.php/Api/";
+const BASE_URL = "http://192.168.1.28/PROJECTS/smaaveros_ecommerce/ecom_smaaveros/index.php/Api/";
 class Api{
 
 //  Carousel
@@ -116,8 +118,6 @@ class Api{
     var response = await http.get(Uri.parse(url));
 
     if(response.statusCode == 200) {
-
-      print(ListFeedResponse.fromJson(jsonDecode(response.body)));
       return ListFeedResponse.fromJson(jsonDecode(response.body));
     }else{
       throw "Unable to get list feed";
@@ -233,6 +233,18 @@ class Api{
       return DetailHelpResponse.fromJson(jsonDecode(response.body));
     }else{
       throw "Unable to get detail help";
+    }
+  }
+
+  static Future<AboutResponse> getAbout() async{
+    var url = BASE_URL + "About/select_about";
+
+    var response = await http.get(Uri.parse(url));
+
+    if(response.statusCode == 200) {
+      return AboutResponse.fromJson(jsonDecode(response.body));
+    }else{
+      throw "Unable to get about";
     }
   }
 

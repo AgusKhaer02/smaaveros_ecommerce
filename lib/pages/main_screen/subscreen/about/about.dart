@@ -1,3 +1,5 @@
+import 'package:ecommerce/api/about/AboutResponse.dart';
+import 'package:ecommerce/api/api.dart';
 import 'package:flutter/material.dart';
 
 class AboutPage extends StatefulWidget {
@@ -8,8 +10,29 @@ class AboutPage extends StatefulWidget {
 }
 
 class _AboutPageState extends State<AboutPage> {
+  Future<AboutResponse> getAbout = Api.getAbout();
+
   @override
   Widget build(BuildContext context) {
+    return FutureBuilder(
+      future: getAbout,
+      builder: (context, AsyncSnapshot<AboutResponse> snapshot) {
+        if (snapshot.hasData) {
+          return showAbout(snapshot.data!);
+        }else if(snapshot.hasError){
+          return Center(
+            child: Text("Something wrong"),
+          );
+        }
+
+        return Center(
+          child: CircularProgressIndicator(),
+        );
+      },
+    );
+  }
+
+  Stack showAbout(AboutResponse data) {
     return Stack(
       children: [
         Image.network(
@@ -47,9 +70,13 @@ class _AboutPageState extends State<AboutPage> {
                       ),
                       Align(
                         alignment: Alignment.center,
-                        child: Text("Ecommerce Averos",style: TextStyle(fontWeight: FontWeight.bold, fontSize: 20),),
+                        child: Text(
+                          "Ecommerce Averos",
+                          style: TextStyle(
+                              fontWeight: FontWeight.bold, fontSize: 20),
+                        ),
                       ),
-                      Text("E-commerce adalah aktivitas penggunaan teknologi informasi dan komunikasi pengolahan digital dalam melakukan transaksi bisnis untuk menciptakan, mengubah, dan mendefinisikan kembali hubungan antara penjual dan pembeli."),
+                      Text(data.data?.appDesc ?? "Kosong"),
                     ],
                   ),
                 ),
